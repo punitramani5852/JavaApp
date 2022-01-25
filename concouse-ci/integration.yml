@@ -1,37 +1,146 @@
-branches:
-- name: main
-  options:
-  - test
-  - test-with-docker
-  - contract-test
-  - sonar
-  - publish-docker-image-to-dev
-  - quark-phoenix-docker-image-deploy
+---
+resources:
+- name: repo
+  type: git
+  source:
+    uri: https://github.com/punitramani5852/JavaApp.git
+    branch: develop
+jobs:
+- name: feature
+  plan:
+  - get: repo
+    trigger: true 
+  - task: pacage
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      run:
+        path: sh
+        args:
+          - -exc
+          - ls -la; echo "Created a file on $(date)" > ./files/created_file
+      outputs:
+        - name: files
+  - task: Run test
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files
+      outputs: files1
+  - task: sonar
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files1
+      outputs: files2
+  - task: publishtartifact
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files2
+      outputs: files2
+
 - name: develop
-  options:
-  - test
-  - test-with-docker
-  - contract-test
-  - sonar
-  - publish-docker-image-to-dev
-  - quark-phoenix-docker-image-deploy
-- name: ci
-  options:
-  - test
-  - test-with-docker
-  - contract-test
-  - sonar
-ignoredBranches:
-- version
-parameters:
-  branch-naming: true
-  environment: {}
-  project-dir: ''
-repository:
-  default-branch: main
-  href:
-    https: 'https://github.com/punitramani5852/JavaApp.git'
-    ssh: 'git@github.com:punitramani5852/JavaApp.git'
-  name: javaApp
-settings-profile: default
-template: app
+  plan:
+  - get: repo
+    trigger: true 
+  - task: pacage
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      run:
+        path: sh
+        args:
+          - -exc
+          - ls -la; echo "Created a file on $(date)" > ./files/created_file
+      outputs:
+        - name: files
+  - task: Run test
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files
+      outputs: files1
+  - task: sonar
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files1
+      outputs: files2
+  - task: publishtartifact
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files2
+      outputs: files3
+  jobs:
+- name: master
+  plan:
+  - get: repo
+    trigger: true 
+  - task: pacage
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      run:
+        path: sh
+        args:
+          - -exc
+          - ls -la; echo "Created a file on $(date)" > ./files/created_file
+      outputs:
+        - name: files
+  - task: Run test
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files
+      outputs: files1
+  - task: sonar
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files1
+      outputs: files2
+  - task: publishtartifact
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: busybox }
+      inputs:
+        - name: files2
+      outputs: files3
+
+
+
+  
