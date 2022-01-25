@@ -1,0 +1,37 @@
+branches:
+- name: main
+  options:
+  - test
+  - test-with-docker
+  - contract-test
+  - sonar
+  - publish-docker-image-to-dev
+  - quark-phoenix-docker-image-deploy
+- name: develop
+  options:
+  - test
+  - test-with-docker
+  - contract-test
+  - sonar
+  - publish-docker-image-to-dev
+  - quark-phoenix-docker-image-deploy
+- name: ci
+  options:
+  - test
+  - test-with-docker
+  - contract-test
+  - sonar
+ignoredBranches:
+- version
+parameters:
+  branch-naming: true
+  environment: {}
+  project-dir: ''
+repository:
+  default-branch: main
+  href:
+    https: 'https://github.com/punitramani5852/JavaApp.git'
+    ssh: 'git@github.com:punitramani5852/JavaApp.git'
+  name: javaApp
+settings-profile: default
+template: app
